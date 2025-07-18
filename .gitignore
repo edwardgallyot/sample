@@ -1,0 +1,39 @@
+# Build directories
+build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Executables and binaries
+*.exe
+*.out
+*.app
+*.o
+*.obj
+*.so
+*.a
+*.dll
+*.dylib
+
+# Editor and OS files
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+.cache/
+
+# Submodule build outputs
+external/miniaudio/build/
+
+# User-specific files
+*.log
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Raspberry Pi transfer artifacts
+*.elf
+*.bin 
