@@ -1,16 +1,14 @@
-#include "audio_backend/miniaudio_backend.hpp"
-#include <iostream>
+#include "app/app.hpp"
+#include "memory/memory.hpp"
 
 int main(int argc, char** argv)
 {
-    MiniaudioBackend audioBackend;
-    
-    if (!audioBackend.initialize()) {
-        std::cerr << "Failed to initialize audio backend" << std::endl;
+    Sampler::App app;
+    bool isAppInitialised = Sampler::App::Init(&app);
+    if (!isAppInitialised)
+    {
         return -1;
     }
-    
-    audioBackend.printDeviceInfo();
-    
+    app.Run();
     return 0;
 }
