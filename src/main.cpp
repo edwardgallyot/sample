@@ -1,14 +1,16 @@
-#include "app/app.hpp"
-#include "memory/memory.hpp"
+#include "app.hpp"
+#include "logger.hpp"
+#include "memory.hpp"
 
 int main(int argc, char** argv)
 {
-    Sampler::App app;
-    bool isAppInitialised = Sampler::App::Init(&app);
-    if (!isAppInitialised)
+    using namespace Sampler;
+    auto app = App();
+    if (!app.Run())
     {
-        return -1;
+        Logger::LogError("App ran unsuccessfully");
     }
-    app.Run();
+
+    Logger::LogInfo("Ran successfully");
     return 0;
 }

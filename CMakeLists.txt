@@ -14,8 +14,9 @@ set(MINIAUDIO_NO_NODE_GRAPH ON CACHE BOOL "Disable node graph in miniaudio")
 # Add the executable
 add_executable(SAMPLER 
     src/main.cpp 
-    src/app/app.cpp
-    src/memory/memory.cpp
+    src/app.cpp
+    src/memory.cpp
+    src/logger.cpp
 )
 
 # Specify any additional include directories
