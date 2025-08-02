@@ -7,16 +7,14 @@ project(SAMPLER VERSION 1.0)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-set(MINIAUDIO_ENABLE_ALSA ON CACHE BOOL "Enable ALSA backend in miniaudio")
-set(MINIAUDIO_NO_EXTRA_NODES ON CACHE BOOL "Disable extra node graph nodes in miniaudio")
-set(MINIAUDIO_NO_NODE_GRAPH ON CACHE BOOL "Disable node graph in miniaudio")
-
 # Add the executable
 add_executable(SAMPLER 
     src/main.cpp 
     src/app.cpp
     src/memory.cpp
     src/logger.cpp
+    src/terminal.cpp
+    src/utils.cpp
 )
 
 # Specify any additional include directories

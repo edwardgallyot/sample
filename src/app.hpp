@@ -1,16 +1,19 @@
-#include <atomic>
-#include "memory.hpp"
 #include "logger.hpp"
+#include "memory.hpp"
+#include "terminal.hpp"
 
 namespace Sampler
 {
 class App 
 {
 public:
-    App();
+    App(Logger& logger);
     ~App();
     bool Run();
 private:
-    bool m_isRunning;
+    Logger& logger;
+    Memory memory;
+    Terminal terminal;
+    bool isRunning;
 };
 }

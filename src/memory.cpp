@@ -1,32 +1,56 @@
+#include <cstddef>
 #include <cstdlib>
+#include <sys/mman.h>
+#include <unistd.h>
 
 #include "memory.hpp"
+#include "logger.hpp"
+#include "types.hpp"
 
 using namespace Sampler;
 
-Memory* Memory::s_instance = nullptr;
-
-Memory::Memory()
-    : m_offset(0)
+Memory::Memory(Logger& _logger)
+    : offset(0),
+      size(0),
+      memory(nullptr),
+      logger(_logger)
 {
-    m_memory = std::malloc(Memory::Size);
 }
 
 Memory::~Memory()
 {
+    if (this->memory != nullptr)
+    {
+        munmap(this->memory, this->size);
+    }
+}
+
+bool Memory::Allocate(size_t size)
+{
+    if (this->memory != nullptr)
+    {
+        munmap(this->memory, this->size);
+    }
+
+    this->memory = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (this->memory == MAP_FAILED)
+    {
+        this->logger.LogError("Couldn't map memory of size: %u", size);
+        return false;
+    }
+
+    this->size = size;
+    return true;
 }
 
 void* Memory::Push(size_t size)
 {
-    return std::malloc(size);
+    size_t newOffset = this->offset + size;
+    if (newOffset > this->size)
+    {
+        this->logger.LogError("Ran out of memory. Requested offset: %u, Memory size: %u", newOffset, this->size);
+        return nullptr;
+    }
+    return (u8*)this->memory + this->offset;
 }
 
-Memory* Memory::Instance()
-{
-    if (s_instance == nullptr)
-    {
-        static Memory s_memory = Memory();
-        s_instance = &s_memory;
-    }
-    return s_instance;
-}

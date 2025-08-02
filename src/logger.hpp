@@ -7,6 +7,7 @@ namespace Sampler
 class Logger
 {
 public:
+    Logger(const char* _name);
     enum class Level
     {
         Info,
@@ -15,19 +16,14 @@ public:
         Critical,
     };
 
-    static void Init(const char* name, FILE* file = nullptr);
-    static void LogInfo(const char* message, ...);
-    static void LogWarning(const char* message, ...);
-    static void LogError(const char* message, ...);
-    static void LogCritical(const char* message, ...);
-    void* operator new(size_t size);
+    void LogInfo(const char* message, ...);
+    void LogWarning(const char* message, ...);
+    void LogError(const char* message, ...);
+    void LogCritical(const char* message, ...);
 private:
-    Logger(const char* name, FILE* file = nullptr);
-    static const char* GetPrefixForLevel(Level level);
-    static void Log(Level level, const char* message, va_list args);
-    
-    const char* m_name = nullptr;
-    FILE* m_file = nullptr;
-    static Logger* s_instance;
+    const char* GetPrefixForLevel(Level level);
+    void Log(Level level, const char* message, va_list args);
+    const char* name;
+    FILE* file;
 };
 }

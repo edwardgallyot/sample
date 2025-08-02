@@ -5,12 +5,14 @@
 int main(int argc, char** argv)
 {
     using namespace Sampler;
-    auto app = App();
+    auto logger = Logger("APP");
+    auto app = App(logger);
     if (!app.Run())
     {
-        Logger::LogError("App ran unsuccessfully");
+        logger.LogError("App ran unsuccessfully");
+        return 1;
     }
 
-    Logger::LogInfo("Ran successfully");
+    logger.LogInfo("Ran successfully");
     return 0;
 }

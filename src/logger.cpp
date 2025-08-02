@@ -6,22 +6,11 @@
 
 using namespace Sampler;
 
-Logger* Logger::s_instance = nullptr;
 
-Logger::Logger(const char* name, FILE* file)
-: m_name(name)
-, m_file(file)
+Logger::Logger(const char* _name)
+: name(_name),
+  file(nullptr)
 {
-}
-
-void* Logger::operator new(size_t size)
-{
-    return Memory::Push(size);
-}
-
-void Logger::Init(const char* name, FILE* file)
-{
-    s_instance = new Logger(name, file);
 }
 
 const char* Logger::GetPrefixForLevel(Level level)
@@ -38,7 +27,7 @@ const char* Logger::GetPrefixForLevel(Level level)
 
 void Logger::Log(Level level, const char* message, va_list args)
 {
-    std::printf("%s: ", GetPrefixForLevel(level));
+    std::printf("[%s] %s: ", this->name, GetPrefixForLevel(level));
     std::vprintf(message, args);
     std::printf("\n");
 }

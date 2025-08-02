@@ -1,10 +1,15 @@
 #include "app.hpp"
-#include <cstdio>
+#include "memory.hpp"
+#include "logger.hpp"
+#include "utils.hpp"
 
 using namespace Sampler;
 
-App::App()
-: m_isRunning(false)
+App::App(Logger& _logger)
+: isRunning(false),
+    logger(_logger),
+    memory(_logger),
+    terminal()
 {
 }
 
@@ -13,25 +18,32 @@ App::~App()
 
 }
 
-
 bool App::Run()
 {
-    const size_t appMemorySize = 1024;
+    const size_t appMemorySize = Utils::Megabytes(512);
 
-    auto memory = Sampler::Memory::Instance();
-    if (!memory)
+    bool success = this->memory.Allocate(appMemorySize);
+    if (!success)
     {
-        Logger::LogError( "Memory failed to intialise");
+        this->logger.LogError( "Memory failed to intialise");
         return false;
     }
 
-    Logger::LogInfo( "App intialised successfully");
+    const u32 maxCommands = 1024;
+    success = this->terminal.Allocate(this->memory, maxCommands);
+    if (!success)
+    {
+        this->logger.LogError( "Memory failed to intialise");
+        return false;
+    }
 
-    Logger::LogInfo( "Set isRunning to true.");
-    m_isRunning = true;
+    this->logger.LogInfo( "App intialised successfully");
 
-    Logger::LogInfo("Beginning main loop.");
-    while (m_isRunning)
+    this->logger.LogInfo( "Set isRunning to true.");
+    this->isRunning = true;
+
+    this->logger.LogInfo("Beginning main loop.");
+    while (this->isRunning)
     {
     }
     return true;
