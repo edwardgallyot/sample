@@ -1,32 +1,36 @@
+#pragma once
+
 #include "memory.hpp"
 #include "types.hpp"
 
-namespace Sampler
+namespace Smpl
 {
 class Terminal
 {
 public: 
-    struct Cmd
-    {
-        const char* name;
-        const char* help;
-        virtual void command() = 0;
-    };
-
-    struct CmdNode
-    {
-        Cmd* cmd;
-        CmdNode* child;
-        size_t childCount;
-    };
 
     Terminal();
     ~Terminal();
 
-    bool Allocate(Memory& memory, u32 numCommands);
-    bool AddCmd(Cmd* cmd, CmdNode* level);
+    bool Init(Logger& logger, Memory& memory, u32 numCommands);
+    bool AddCmd(const char* name, const char* help, void (*callback)(const char*, void*), void* context);
+    void Welcome();
+    bool HandleIoNonBlocking();
 private:
-    CmdNode*    commandTreeNodes;
-    size_t      commandTreeNodesSize;
+    struct Cmd
+    {
+        const char* name;
+        const char* help;
+        void (*callback)(const char*, void*);
+        void* context;
+    };
+
+    Cmd*    commands;
+    size_t  commandsSize;
+    size_t  commandsCount;
+
+    char*  inputBuffer;
+    size_t inputCount;
+    size_t inputBufferSize;
 };
 }

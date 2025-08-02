@@ -7,7 +7,7 @@
 #include "logger.hpp"
 #include "types.hpp"
 
-using namespace Sampler;
+using namespace Smpl;
 
 Memory::Memory(Logger& _logger)
     : offset(0),
@@ -51,6 +51,7 @@ void* Memory::Push(size_t size)
         this->logger.LogError("Ran out of memory. Requested offset: %u, Memory size: %u", newOffset, this->size);
         return nullptr;
     }
+    this->offset = newOffset;
     return (u8*)this->memory + this->offset;
 }
 

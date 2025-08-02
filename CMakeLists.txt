@@ -15,6 +15,7 @@ add_executable(SAMPLER
     src/logger.cpp
     src/terminal.cpp
     src/utils.cpp
+    src/alsa.cpp
 )
 
 # Specify any additional include directories
@@ -26,4 +27,16 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 add_custom_command(TARGET SAMPLER POST_BUILD
     COMMAND scp $<TARGET_FILE:SAMPLER> pi@raspberry.local:~/
     COMMENT "Copying SAMPLER to Raspberry Pi (pi@raspberry.local:~)"
+)
+
+# Copy source folder to Raspberry Pi
+add_custom_command(TARGET SAMPLER POST_BUILD
+    COMMAND scp -r ${CMAKE_SOURCE_DIR}/src pi@raspberry.local:~/
+    COMMENT "Copying source folder to Raspberry Pi (pi@raspberry.local:~/src)"
+)
+
+# Add remote cleanup command that runs during clean
+add_custom_command(TARGET SAMPLER PRE_BUILD
+    COMMAND ssh pi@raspberry.local "rm -f ~/SAMPLER && rm -rf ~/src" 2>/dev/null || true
+    COMMENT "Cleaning remote files before build"
 )

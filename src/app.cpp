@@ -3,13 +3,14 @@
 #include "logger.hpp"
 #include "utils.hpp"
 
-using namespace Sampler;
+using namespace Smpl;
 
 App::App(Logger& _logger)
 : isRunning(false),
     logger(_logger),
     memory(_logger),
-    terminal()
+    terminal(),
+    alsa(_logger)
 {
 }
 
@@ -30,10 +31,10 @@ bool App::Run()
     }
 
     const u32 maxCommands = 1024;
-    success = this->terminal.Allocate(this->memory, maxCommands);
+    success = this->terminal.Init(this->logger, this->memory, maxCommands);
     if (!success)
     {
-        this->logger.LogError( "Memory failed to intialise");
+        this->logger.LogError( "Terminal failed to allocate");
         return false;
     }
 
@@ -42,9 +43,18 @@ bool App::Run()
     this->logger.LogInfo( "Set isRunning to true.");
     this->isRunning = true;
 
+    this->alsa.Init(this->memory, this->terminal);
+
     this->logger.LogInfo("Beginning main loop.");
+
+    terminal.Welcome();
+
     while (this->isRunning)
     {
+        if (!this->terminal.HandleIoNonBlocking())
+        {
+            this->logger.LogError("Error handling terminal IO");
+        }
     }
     return true;
 }

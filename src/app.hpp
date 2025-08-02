@@ -1,8 +1,11 @@
+#pragma once
+
+#include "alsa.hpp"
 #include "logger.hpp"
 #include "memory.hpp"
 #include "terminal.hpp"
 
-namespace Sampler
+namespace Smpl
 {
 class App 
 {
@@ -14,6 +17,7 @@ private:
     Logger& logger;
     Memory memory;
     Terminal terminal;
+    Alsa alsa;
     bool isRunning;
 };
 }

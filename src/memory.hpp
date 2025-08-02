@@ -3,8 +3,9 @@
 #include "logger.hpp"
 #include <cstddef>
 
-namespace Sampler
+namespace Smpl
 {
+
 class Memory
 {
 public:
@@ -31,6 +32,5 @@ T* Memory::Push(size_t count)
 {
     return reinterpret_cast<T*>(this->Push(sizeof(T) * count));
 }
-
 }
 

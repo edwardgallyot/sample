@@ -2,7 +2,7 @@
 
 #include <cstdio>
 
-namespace Sampler
+namespace Smpl
 {
 class Logger
 {

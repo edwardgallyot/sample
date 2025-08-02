@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <cwchar>
 
-using namespace Sampler;
+using namespace Smpl;
 
 
 Logger::Logger(const char* _name)

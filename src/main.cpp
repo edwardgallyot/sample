@@ -4,7 +4,7 @@
 
 int main(int argc, char** argv)
 {
-    using namespace Sampler;
+    using namespace Smpl;
     auto logger = Logger("APP");
     auto app = App(logger);
     if (!app.Run())
