@@ -18,7 +18,7 @@ using i64 = std::int64_t;
 using f32 = float;
 using f64 = double;
 
-using char8 = unsigned char;
+using char8 = char;
 using char16 = char16_t;
 using char32 = char32_t;
 

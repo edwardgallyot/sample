@@ -94,6 +94,8 @@ bool terminal::handle_io_non_blocking()
 
     fputc(c, stdout);
 
+    char* buf = this->input_buffer;
+
     if (c == '\n') 
     {
         size_t input_split = 0;
@@ -101,7 +103,7 @@ bool terminal::handle_io_non_blocking()
             size_t in = 0;
             for (in = 0; in < this->input_count; ++in)
             {
-                char input = input_buffer[in];
+                char input = buf[in];
                 if (input == ' ' || input == 0)
                 {
                     break;
@@ -118,21 +120,34 @@ bool terminal::handle_io_non_blocking()
             {
                 auto& command = this->commands[cmd];
             
-                found_match = strncmp(command.name, this->input_buffer, input_split) == 0;
+                found_match = strncmp(command.name, buf, input_split) == 0;
                 if (found_match)
                 {
-                    command.callback(input_buffer + input_split, command.context);
+                    command.callback(buf + input_split, command.context);
                     break;
                 }
             }
         }
 
+
         if (has_input && !found_match)
         {
-            printf("Command not found!\n");
+            if (strncasecmp("help", this->input_buffer, input_split) == 0)
+            {
+                printf("\n");
+                for (size_t cmd = 0; cmd < this->commands_count; ++cmd)
+                {
+                    auto& command = this->commands[cmd];
+                    printf("%s: %s\n", command.name, command.help);
+                }
+            }
+            else 
+            {
+                printf("Command %.*s not found!\n", input_split, buf);
+            }
         }
 
-        memset(this->input_buffer, 0, this->input_buffer_size);
+        memset(buf, 0, this->input_buffer_size);
         this->input_count = 0;
         fputc('>', stdout);
         return true;

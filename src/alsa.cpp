@@ -25,7 +25,7 @@ static void some_cool_command(const char* s, void* context)
 
 bool alsa_io::init(memory& memory, terminal& term)
 {
-    term.add_cmd("Cool", "Some Cool Beanz", some_cool_command, this);
+    term.add_cmd("ALSA", "Alsa IO commands", some_cool_command, this);
 
     return true;
 }

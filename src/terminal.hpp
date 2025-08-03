@@ -23,8 +23,6 @@ public:
     bool handle_io_non_blocking();
 private:
 
-    void print_help();
-
     struct cmd
     {
         const char* name;
@@ -40,5 +38,6 @@ private:
     char*  input_buffer;
     size_t input_count;
     size_t input_buffer_size;
+
 };
 }
