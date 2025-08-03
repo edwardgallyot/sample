@@ -22,6 +22,9 @@ public:
     void welcome();
     bool handle_io_non_blocking();
 private:
+
+    void print_help();
+
     struct cmd
     {
         const char* name;

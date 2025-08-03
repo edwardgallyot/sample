@@ -17,8 +17,8 @@ public:
 
     void* push(size_t size);
 
-    template<typename T>
-    T* push(size_t count = 1);
+    template<typename type>
+    type* push(size_t count = 1);
 
 private:
     void *memory_ptr;
@@ -27,10 +27,10 @@ private:
     logger& log;
 };
 
-template<typename T>
-T* memory::push(size_t count)
+template<typename type>
+type* memory::push(size_t count)
 {
-    return reinterpret_cast<T*>(this->push(sizeof(T) * count));
+    return reinterpret_cast<type*>(this->push(sizeof(type) * count));
 }
 }
 
