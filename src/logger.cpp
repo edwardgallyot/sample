@@ -4,62 +4,62 @@
 #include <cstdio>
 #include <cwchar>
 
-using namespace Smpl;
+using namespace smpl;
 
 
-Logger::Logger(const char* _name)
+logger::logger(const char* _name)
 : name(_name),
   file(nullptr)
 {
 }
 
-const char* Logger::GetPrefixForLevel(Level level)
+const char* logger::get_prefix_for_level(level l)
 {
-    switch (level)
+    switch (l)
     {
-    case Level::Info: return "INFO";
-    case Level::Warning: return "WARNING";
-    case Level::Error: return "ERROR";
-    case Level::Critical: return "CRITICAL";
+    case level::info: return "INFO";
+    case level::warning: return "WARNING";
+    case level::error: return "ERROR";
+    case level::critical: return "CRITICAL";
     default: return "UNKNOWN";
     }
 }
 
-void Logger::Log(Level level, const char* message, va_list args)
+void logger::log(level l, const char* message, va_list args)
 {
-    std::printf("[%s] %s: ", this->name, GetPrefixForLevel(level));
+    std::printf("[%s] %s: ", this->name, get_prefix_for_level(l));
     std::vprintf(message, args);
     std::printf("\n");
 }
 
-void Logger::LogInfo(const char* message, ...)
+void logger::log_info(const char* message, ...)
 {
     va_list args;
     va_start(args, message);
-    Log(Level::Info, message, args);
+    log(level::info, message, args);
     va_end(args);
 }
 
-void Logger::LogWarning(const char* message, ...)
+void logger::log_warning(const char* message, ...)
 {
     va_list args;
     va_start(args, message);
-    Log(Level::Warning, message, args);
+    log(level::warning, message, args);
     va_end(args);
 }
 
-void Logger::LogError(const char* message, ...)
+void logger::log_error(const char* message, ...)
 {
     va_list args;
     va_start(args, message);
-    Log(Level::Error, message, args);
+    log(level::error, message, args);
     va_end(args);
 }
 
-void Logger::LogCritical(const char* message, ...)
+void logger::log_critical(const char* message, ...)
 {
     va_list args;
     va_start(args, message);
-    Log(Level::Critical, message, args);
+    log(level::critical, message, args);
     va_end(args);
 }

@@ -1,18 +1,18 @@
 #include "utils.hpp"
 
-namespace Utils 
+namespace utils 
 {
-    size_t Gigabytes(size_t num) 
+    size_t gigabytes(size_t num) 
     {
-        return Megabytes(num) * 1024;
+        return megabytes(num) * 1024;
     }
     
-    size_t Megabytes(size_t num) 
+    size_t megabytes(size_t num) 
     {
-        return Kilobytes(num) * 1024;
+        return kilobytes(num) * 1024;
     }
     
-    size_t Kilobytes(size_t num) 
+    size_t kilobytes(size_t num) 
     {
         return num * 1024;
     }

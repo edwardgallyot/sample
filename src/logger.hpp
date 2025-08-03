@@ -2,27 +2,27 @@
 
 #include <cstdio>
 
-namespace Smpl
+namespace smpl
 {
-class Logger
+class logger
 {
 public:
-    Logger(const char* _name);
-    enum class Level
+    logger(const char* _name);
+    enum class level
     {
-        Info,
-        Warning,
-        Error,
-        Critical,
+        info,
+        warning,
+        error,
+        critical,
     };
 
-    void LogInfo(const char* message, ...);
-    void LogWarning(const char* message, ...);
-    void LogError(const char* message, ...);
-    void LogCritical(const char* message, ...);
+    void log_info(const char* message, ...);
+    void log_warning(const char* message, ...);
+    void log_error(const char* message, ...);
+    void log_critical(const char* message, ...);
 private:
-    const char* GetPrefixForLevel(Level level);
-    void Log(Level level, const char* message, va_list args);
+    const char* get_prefix_for_level(level level);
+    void log(level level, const char* message, va_list args);
     const char* name;
     FILE* file;
 };

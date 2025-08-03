@@ -2,58 +2,60 @@
 #include "memory.hpp"
 #include "logger.hpp"
 #include "utils.hpp"
+#include "terminal.hpp"
+#include "alsa.hpp"
 
-using namespace Smpl;
+using namespace smpl;
 
-App::App(Logger& _logger)
-: isRunning(false),
-    logger(_logger),
-    memory(_logger),
-    terminal(),
-    alsa(_logger)
+app::app(logger& _log)
+: is_running(false),
+    log(_log),
+    mem(_log),
+    term(),
+    alsa(_log)
 {
 }
 
-App::~App()
+app::~app()
 {
 
 }
 
-bool App::Run()
+bool app::run()
 {
-    const size_t appMemorySize = Utils::Megabytes(512);
+    const size_t app_memory_size = utils::megabytes(512);
 
-    bool success = this->memory.Allocate(appMemorySize);
+    bool success = this->mem.allocate(app_memory_size);
     if (!success)
     {
-        this->logger.LogError( "Memory failed to intialise");
+        this->log.log_error( "Memory failed to intialise");
         return false;
     }
 
-    const u32 maxCommands = 1024;
-    success = this->terminal.Init(this->logger, this->memory, maxCommands);
+    const u32 max_commands = 1024;
+    success = this->term.init(this->log, this->mem, max_commands);
     if (!success)
     {
-        this->logger.LogError( "Terminal failed to allocate");
+        this->log.log_error( "Terminal failed to allocate");
         return false;
     }
 
-    this->logger.LogInfo( "App intialised successfully");
+    this->log.log_info( "App intialised successfully");
 
-    this->logger.LogInfo( "Set isRunning to true.");
-    this->isRunning = true;
+    this->log.log_info( "Set is_running to true.");
+    this->is_running = true;
 
-    this->alsa.Init(this->memory, this->terminal);
+    this->alsa.init(this->mem, this->term);
 
-    this->logger.LogInfo("Beginning main loop.");
+    this->log.log_info("Beginning main loop.");
 
-    terminal.Welcome();
+    term.welcome();
 
-    while (this->isRunning)
+    while (this->is_running)
     {
-        if (!this->terminal.HandleIoNonBlocking())
+        if (!this->term.handle_io_non_blocking())
         {
-            this->logger.LogError("Error handling terminal IO");
+            this->log.log_error("Error handling terminal IO");
         }
     }
     return true;

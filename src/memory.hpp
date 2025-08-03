@@ -1,36 +1,39 @@
 #pragma once
 
-#include "logger.hpp"
 #include <cstddef>
 
-namespace Smpl
+namespace smpl
+{
+    class logger;
+}
+
+namespace smpl
 {
 
-class Memory
+class memory
 {
 public:
-    Memory(Logger& _logger);
-    ~Memory();
+    memory(logger& _logger);
+    ~memory();
 
-    bool Allocate(size_t size);
+    bool allocate(size_t size);
 
-    void* Push(size_t size);
+    void* push(size_t size);
 
     template<typename T>
-    T* Push(size_t count = 1);
+    T* push(size_t count = 1);
 
 private:
-    static Memory* s_instance; 
-    void *memory;
+    void *memory_ptr;
     size_t offset;
     size_t size;
-    Logger& logger;
+    logger& log;
 };
 
 template<typename T>
-T* Memory::Push(size_t count)
+T* memory::push(size_t count)
 {
-    return reinterpret_cast<T*>(this->Push(sizeof(T) * count));
+    return reinterpret_cast<T*>(this->push(sizeof(T) * count));
 }
 }
 

@@ -1,23 +1,28 @@
 #pragma once
 
-#include "memory.hpp"
 #include "types.hpp"
 
-namespace Smpl
+namespace smpl
 {
-class Terminal
+    class logger;
+    class memory;
+}
+
+namespace smpl
+{
+class terminal
 {
 public: 
 
-    Terminal();
-    ~Terminal();
+    terminal();
+    ~terminal();
 
-    bool Init(Logger& logger, Memory& memory, u32 numCommands);
-    bool AddCmd(const char* name, const char* help, void (*callback)(const char*, void*), void* context);
-    void Welcome();
-    bool HandleIoNonBlocking();
+    bool init(logger& logger, memory& memory, u32 num_commands);
+    bool add_cmd(const char* name, const char* help, void (*callback)(const char*, void*), void* context);
+    void welcome();
+    bool handle_io_non_blocking();
 private:
-    struct Cmd
+    struct cmd
     {
         const char* name;
         const char* help;
@@ -25,12 +30,12 @@ private:
         void* context;
     };
 
-    Cmd*    commands;
-    size_t  commandsSize;
-    size_t  commandsCount;
+    cmd*    commands;
+    size_t  commands_size;
+    size_t  commands_count;
 
-    char*  inputBuffer;
-    size_t inputCount;
-    size_t inputBufferSize;
+    char*  input_buffer;
+    size_t input_count;
+    size_t input_buffer_size;
 };
 }

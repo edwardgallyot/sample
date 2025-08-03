@@ -2,9 +2,9 @@
 
 #include <cstddef>
 
-namespace Utils 
+namespace utils 
 {
-    size_t Gigabytes(size_t num);
-    size_t Megabytes(size_t num);
-    size_t Kilobytes(size_t num);
+    size_t gigabytes(size_t num);
+    size_t megabytes(size_t num);
+    size_t kilobytes(size_t num);
 }

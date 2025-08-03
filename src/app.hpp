@@ -1,23 +1,23 @@
 #pragma once
 
-#include "alsa.hpp"
 #include "logger.hpp"
 #include "memory.hpp"
 #include "terminal.hpp"
+#include "alsa.hpp"
 
-namespace Smpl
+namespace smpl
 {
-class App 
+class app 
 {
 public:
-    App(Logger& logger);
-    ~App();
-    bool Run();
+    app(logger& logger);
+    ~app();
+    bool run();
 private:
-    Logger& logger;
-    Memory memory;
-    Terminal terminal;
-    Alsa alsa;
-    bool isRunning;
+    logger& log;
+    memory mem;
+    terminal term;
+    alsa_io alsa;
+    bool is_running;
 };
 }

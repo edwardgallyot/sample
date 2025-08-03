@@ -1,5 +1,7 @@
 
 #include "terminal.hpp"
+#include "logger.hpp"
+#include "memory.hpp"
 #include <cstddef>
 #include <cstdio>
 #include <stdio.h>
@@ -8,47 +10,47 @@
 #include <cstring>
 #include <termios.h>
 
-using namespace Smpl;
+using namespace smpl;
 
-Terminal::Terminal()
+terminal::terminal()
     : 
     commands(nullptr),
-    commandsSize(0),
-    commandsCount(0),
-    inputBuffer(nullptr),
-    inputCount(0),
-    inputBufferSize(0)
+    commands_size(0),
+    commands_count(0),
+    input_buffer(nullptr),
+    input_count(0),
+    input_buffer_size(0)
 {
 }
 
-Terminal::~Terminal()
+terminal::~terminal()
 {
 }
 
 
-bool Terminal::Init(Logger& logger, Memory& memory, u32 numCommands)
+bool terminal::init(logger& logger, memory& memory, u32 num_commands)
 {
     // Allocate command memory
-    this->commandsSize = numCommands * sizeof(Cmd);
-    this->commands = memory.Push<Cmd>(numCommands);
+    this->commands_size = num_commands * sizeof(cmd);
+    this->commands = memory.push<cmd>(num_commands);
     if (!this->commands)
     {
-        logger.LogError("Couldn't allocate commands buffer of size: %u", this->commandsSize);
-        this->commandsSize = 0;
+        logger.log_error("Couldn't allocate commands buffer of size: %u", this->commands_size);
+        this->commands_size = 0;
         return false;
     }
 
     // Allocate input buffer memory
-    this->inputBufferSize = 512;
-    this->inputBuffer = memory.Push<char>(this->inputBufferSize);
-    if (!this->inputBuffer)
+    this->input_buffer_size = 512;
+    this->input_buffer = memory.push<char>(this->input_buffer_size);
+    if (!this->input_buffer)
     {
-        logger.LogError("Couldn't allocate input buffer of size: %u", this->inputBufferSize);
-        this->inputBufferSize = 0;
+        logger.log_error("Couldn't allocate input buffer of size: %u", this->input_buffer_size);
+        this->input_buffer_size = 0;
         return false;
     }
 
-    memset(this->inputBuffer, 0, this->inputBufferSize);
+    memset(this->input_buffer, 0, this->input_buffer_size);
 
     int flags = fcntl(STDIN_FILENO, F_GETFL, 0);
     fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
@@ -62,26 +64,26 @@ bool Terminal::Init(Logger& logger, Memory& memory, u32 numCommands)
     return true;
 }
 
-bool Terminal::AddCmd(const char* name, const char* help, void (*callback)(const char*, void*), void* context = nullptr)
+bool terminal::add_cmd(const char* name, const char* help, void (*callback)(const char*, void*), void* context = nullptr)
 {
-    if (this->commandsCount >= this->commandsSize)
+    if (this->commands_count >= this->commands_size)
     {
         return false;
     }
-    this->commands[this->commandsCount].name = name;
-    this->commands[this->commandsCount].help = help;
-    this->commands[this->commandsCount].callback = callback;
-    this->commands[this->commandsCount].context = context;
-    this->commandsCount++;
+    this->commands[this->commands_count].name = name;
+    this->commands[this->commands_count].help = help;
+    this->commands[this->commands_count].callback = callback;
+    this->commands[this->commands_count].context = context;
+    this->commands_count++;
     return true;
 }
 
-void Terminal::Welcome()
+void terminal::welcome()
 {
     fputc('>', stdout);
 }
 
-bool Terminal::HandleIoNonBlocking()
+bool terminal::handle_io_non_blocking()
 {
     int c = getc(stdin);
 
@@ -94,56 +96,56 @@ bool Terminal::HandleIoNonBlocking()
 
     if (c == '\n') 
     {
-        size_t inputSplit = 0;
+        size_t input_split = 0;
         {
             size_t in = 0;
-            for (in = 0; in < this->inputCount; ++in)
+            for (in = 0; in < this->input_count; ++in)
             {
-                char input = inputBuffer[in];
+                char input = input_buffer[in];
                 if (input == ' ' || input == 0)
                 {
                     break;
                 }
             }
-            inputSplit = in;
+            input_split = in;
         }
 
-        bool foundMatch = false;
-        bool hasInput = this->inputCount > 0;
-        if (hasInput)
+        bool found_match = false;
+        bool has_input = this->input_count > 0;
+        if (has_input)
         {
-            for (size_t cmd = 0; cmd < this->commandsCount; ++cmd)
+            for (size_t cmd = 0; cmd < this->commands_count; ++cmd)
             {
                 auto& command = this->commands[cmd];
             
-                foundMatch = strncmp(command.name, this->inputBuffer, inputSplit) == 0;
-                if (foundMatch)
+                found_match = strncmp(command.name, this->input_buffer, input_split) == 0;
+                if (found_match)
                 {
-                    command.callback(inputBuffer + inputSplit, command.context);
+                    command.callback(input_buffer + input_split, command.context);
                     break;
                 }
             }
         }
 
-        if (hasInput && !foundMatch)
+        if (has_input && !found_match)
         {
             printf("Command not found!\n");
         }
 
-        memset(this->inputBuffer, 0, this->inputBufferSize);
-        this->inputCount = 0;
+        memset(this->input_buffer, 0, this->input_buffer_size);
+        this->input_count = 0;
         fputc('>', stdout);
         return true;
     }
 
-    if (inputCount >= inputBufferSize)
+    if (input_count >= input_buffer_size)
     {
         printf("OVERFLOW\n");
         return false;
     }
    
-    this->inputBuffer[this->inputCount] = c; 
-    this->inputCount++;
+    this->input_buffer[this->input_count] = c; 
+    this->input_count++;
 
     return true;
 }

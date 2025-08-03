@@ -7,35 +7,35 @@
 #include "logger.hpp"
 #include "types.hpp"
 
-using namespace Smpl;
+using namespace smpl;
 
-Memory::Memory(Logger& _logger)
+memory::memory(logger& _logger)
     : offset(0),
       size(0),
-      memory(nullptr),
-      logger(_logger)
+      memory_ptr(nullptr),
+      log(_logger)
 {
 }
 
-Memory::~Memory()
+memory::~memory()
 {
-    if (this->memory != nullptr)
+    if (this->memory_ptr != nullptr)
     {
-        munmap(this->memory, this->size);
+        munmap(this->memory_ptr, this->size);
     }
 }
 
-bool Memory::Allocate(size_t size)
+bool memory::allocate(size_t size)
 {
-    if (this->memory != nullptr)
+    if (this->memory_ptr != nullptr)
     {
-        munmap(this->memory, this->size);
+        munmap(this->memory_ptr, this->size);
     }
 
-    this->memory = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-    if (this->memory == MAP_FAILED)
+    this->memory_ptr = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (this->memory_ptr == MAP_FAILED)
     {
-        this->logger.LogError("Couldn't map memory of size: %u", size);
+        this->log.log_error("Couldn't map memory of size: %u", size);
         return false;
     }
 
@@ -43,15 +43,15 @@ bool Memory::Allocate(size_t size)
     return true;
 }
 
-void* Memory::Push(size_t size)
+void* memory::push(size_t size)
 {
-    size_t newOffset = this->offset + size;
-    if (newOffset > this->size)
+    size_t new_offset = this->offset + size;
+    if (new_offset > this->size)
     {
-        this->logger.LogError("Ran out of memory. Requested offset: %u, Memory size: %u", newOffset, this->size);
+        this->log.log_error("Ran out of memory. Requested offset: %u, Memory size: %u", new_offset, this->size);
         return nullptr;
     }
-    this->offset = newOffset;
-    return (u8*)this->memory + this->offset;
+    this->offset = new_offset;
+    return (u8*)this->memory_ptr + this->offset;
 }
 

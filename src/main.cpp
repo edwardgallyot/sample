@@ -4,15 +4,15 @@
 
 int main(int argc, char** argv)
 {
-    using namespace Smpl;
-    auto logger = Logger("APP");
-    auto app = App(logger);
-    if (!app.Run())
+    using namespace smpl;
+    auto logger_instance = logger("APP");
+    auto app_instance = app(logger_instance);
+    if (!app_instance.run())
     {
-        logger.LogError("App ran unsuccessfully");
+        logger_instance.log_error("App ran unsuccessfully");
         return 1;
     }
 
-    logger.LogInfo("Ran successfully");
+    logger_instance.log_info("Ran successfully");
     return 0;
 }
