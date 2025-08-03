@@ -120,7 +120,7 @@ bool terminal::handle_io_non_blocking()
             {
                 auto& command = this->commands[cmd];
             
-                found_match = strncmp(command.name, buf, input_split) == 0;
+                found_match = strncasecmp(command.name, buf, input_split) == 0;
                 if (found_match)
                 {
                     command.callback(buf + input_split, command.context);

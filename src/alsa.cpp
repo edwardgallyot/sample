@@ -1,8 +1,7 @@
+#include <cstdio>
 #include "alsa.hpp"
 #include "logger.hpp"
-#include "memory.hpp"
-#include "terminal.hpp"
-#include <cstdio>
+#include <alsa/asoundlib.h>
 
 using namespace smpl;
 
@@ -16,7 +15,7 @@ alsa_io::~alsa_io()
 
 }
 
-static void some_cool_command(const char* s, void* context)
+static void enumerate_devices(const char* s, void* context)
 {
     alsa_io* alsa = reinterpret_cast<alsa_io*>(context);
 
@@ -25,7 +24,7 @@ static void some_cool_command(const char* s, void* context)
 
 bool alsa_io::init(memory& memory, terminal& term)
 {
-    term.add_cmd("ALSA", "Alsa IO commands", some_cool_command, this);
+    term.add_cmd("ALSA", "Alsa IO commands", enumerate_devices, this);
 
     return true;
 }

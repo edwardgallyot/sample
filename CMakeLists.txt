@@ -19,7 +19,14 @@ add_executable(SAMPLER
 )
 
 # Specify any additional include directories
-target_include_directories(SAMPLER PRIVATE src)
+target_include_directories(SAMPLER PRIVATE 
+    ./src
+    ./alsa-lib/include
+)
+
+target_link_libraries(SAMPLER PRIVATE 
+    ${CMAKE_SOURCE_DIR}/alsa-lib/src/.libs/libasound.so
+)
 
 # Optionally, set the output directory for the executable
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

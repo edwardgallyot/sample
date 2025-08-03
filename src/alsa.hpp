@@ -1,11 +1,7 @@
 #pragma once
 
-namespace smpl
-{
-    class logger;
-    class memory;
-    class terminal;
-}
+#include "terminal.hpp"
+#include "memory.hpp"
 
 namespace smpl
 {
