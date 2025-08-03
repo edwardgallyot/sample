@@ -1,11 +1,8 @@
 #pragma once
 
 #include <cstddef>
+#include "logger.hpp"
 
-namespace smpl
-{
-    class logger;
-}
 
 namespace smpl
 {
@@ -13,7 +10,7 @@ namespace smpl
 class memory
 {
 public:
-    memory(logger& _logger);
+    memory(logger& _log);
     ~memory();
 
     bool allocate(size_t size);
