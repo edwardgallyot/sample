@@ -29,12 +29,15 @@ static void enumerate_devices(const char* s, void* context)
     if (err != 0) 
     {
         printf("Error getting device hints (%d)", err);
+        return;
     }
 
     char **n = (char **)hints;
-	while (*n != NULL) {
+	while (*n != NULL) 
+    {
 		char *name = snd_device_name_get_hint(*n, "NAME");
-		if (name != NULL) {
+		if (name != NULL) 
+        {
 			printf("%s\n", name);
 			free(name);
 		}
@@ -44,9 +47,10 @@ static void enumerate_devices(const char* s, void* context)
 
 }
 
-bool alsa_io::init(memory& memory, terminal& term)
+bool alsa_io::init(utils::memory& memory, terminal& term)
 {
-    term.add_cmd("ALSA", "Alsa IO commands", enumerate_devices, this);
+    auto* alsa_level = term.add_cmd_level("ALSA", "List the alsa devices");
+    term.add_cmd_to_level(alsa_level, enumerate_devices, this);
 
     return true;
 }

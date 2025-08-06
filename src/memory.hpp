@@ -1,16 +1,15 @@
 #pragma once
 
 #include <cstddef>
-#include "logger.hpp"
 
 
-namespace smpl
+namespace utils
 {
 
 class memory
 {
 public:
-    memory(logger& _log);
+    memory();
     ~memory();
 
     bool allocate(size_t size);
@@ -18,13 +17,12 @@ public:
     void* push(size_t size);
 
     template<typename type>
-    type* push(size_t count = 1);
+    type* push(size_t count);
 
 private:
     void *memory_ptr;
     size_t offset;
     size_t size;
-    logger& log;
 };
 
 template<typename type>

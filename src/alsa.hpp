@@ -11,7 +11,7 @@ public:
     alsa_io(logger& _log);
     ~alsa_io();
 
-    bool init(memory& memory, terminal& terminal);
+    bool init(utils::memory& memory, terminal& terminal);
 private:
     logger& log;
 };

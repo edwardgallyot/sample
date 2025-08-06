@@ -1,12 +1,9 @@
 #pragma once
 
-#include "types.hpp"
-
-namespace smpl
-{
-    class logger;
-    class memory;
-}
+#include "logger.hpp"
+#include "buffer.hpp"
+#include "memory.hpp"
+#include "list.hpp"
 
 namespace smpl
 {
@@ -17,27 +14,37 @@ public:
     terminal();
     ~terminal();
 
-    bool init(logger& logger, memory& memory, u32 num_commands);
-    bool add_cmd(const char* name, const char* help, void (*callback)(const char*, void*), void* context);
+
+    struct cmd_level
+    {
+        const char* name;
+        const char* help;
+        utils::list<cmd_level> children;
+        size_t cmd_index;
+    };
+
+    bool init(logger& logger, utils::memory& memory);
+
+    inline constexpr cmd_level* get_base_level() { return &cmd_levels.at(0); }
+    cmd_level* add_cmd_level(const char* name, const char* help, cmd_level* parent = nullptr);
+    bool add_cmd_to_level(cmd_level* level, void (*callback)(const char*, void*), void* context);
+
     void welcome();
     bool handle_io_non_blocking();
+    void print_help();
+
 private:
 
     struct cmd
     {
-        const char* name;
-        const char* help;
         void (*callback)(const char*, void*);
         void* context;
     };
 
-    cmd*    commands;
-    size_t  commands_size;
-    size_t  commands_count;
-
-    char*  input_buffer;
-    size_t input_count;
-    size_t input_buffer_size;
-
+    cmd_level* current_level;
+    utils::buffer<cmd_level> cmd_levels;
+    utils::buffer<utils::list<cmd_level>::node> cmd_nodes;
+    utils::buffer<cmd> cmds;
+    utils::buffer<char> input;
 };
 }

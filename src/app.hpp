@@ -15,7 +15,7 @@ public:
     bool run();
 private:
     logger& log;
-    memory mem;
+    utils::memory mem;
     terminal term;
     alsa_io alsa;
     bool is_running;

@@ -10,7 +10,7 @@ using namespace smpl;
 app::app(logger& _log)
 : is_running(false),
     log(_log),
-    mem(_log),
+    mem(),
     term(),
     alsa(_log)
 {
@@ -32,8 +32,7 @@ bool app::run()
         return false;
     }
 
-    const u32 max_commands = 1024;
-    success = this->term.init(this->log, this->mem, max_commands);
+    success = this->term.init(this->log, this->mem);
     if (!success)
     {
         this->log.log_error( "Terminal failed to allocate");
